@@ -10,67 +10,87 @@
   * { box-sizing: border-box; user-select: none; -webkit-user-select: none; touch-action: none; }
   html, body {
     margin: 0; padding: 0; width: 100%; height: 100%;
-    overflow: hidden; background: #0c0e13; color: #f8fafc;
+    overflow: hidden; background: #090d16; color: #f8fafc;
     font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   }
   #gameCanvas { display: block; width: 100vw; height: 100vh; }
+
   .hud {
-    position: fixed; top: 10px; left: 10px; right: 10px;
-    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px;
+    position: fixed; top: 8px; left: 8px; right: 8px;
+    display: flex; flex-wrap: wrap; gap: 6px;
     pointer-events: none; z-index: 10;
   }
   .pill {
-    background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.45);
-    padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+    background: rgba(15, 23, 42, 0.88); border: 1px solid rgba(245, 158, 11, 0.5);
+    padding: 5px 10px; border-radius: 999px; font-size: 11px; font-weight: 700;
     backdrop-filter: blur(6px);
   }
+
   .top-btns {
-    position: fixed; top: 52px; right: 10px; display: flex; flex-wrap: wrap; gap: 6px; z-index: 15;
+    position: fixed; top: 66px; left: 8px; right: 8px;
+    display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 6px;
+    padding-bottom: 4px; z-index: 15; touch-action: pan-x;
   }
+  .top-btns::-webkit-scrollbar { display: none; }
+
   button.ui-btn {
-    background: #1e293b; color: #f8fafc; border: 1px solid #f59e0b;
-    padding: 7px 11px; border-radius: 8px; font-size: 12px; font-weight: 700;
-    cursor: pointer; touch-action: manipulation;
+    background: rgba(30, 41, 59, 0.94); color: #f8fafc; border: 1px solid #f59e0b;
+    padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700;
+    cursor: pointer; white-space: nowrap; flex-shrink: 0; touch-action: manipulation;
   }
   button.ui-btn.gold { background: #f59e0b; color: #090d16; }
-  #modal {
-    position: fixed; inset: 0; background: rgba(2, 6, 23, 0.88);
-    display: none; align-items: center; justify-content: center; padding: 14px; z-index: 30;
+
+  #cutsceneBox {
+    position: fixed; left: 50%; bottom: 136px; transform: translateX(-50%);
+    width: min(94vw, 560px); background: rgba(15, 23, 42, 0.96);
+    border: 1.5px solid #f59e0b; border-radius: 14px; padding: 12px 14px;
+    display: none; z-index: 25; box-shadow: 0 12px 30px rgba(0,0,0,0.65);
   }
-  .modal-card {
-    width: 100%; max-width: 560px; max-height: 84vh; overflow-y: auto;
-    background: #111827; border: 1px solid #334155; border-radius: 14px; padding: 16px;
-    touch-action: pan-y;
-  }
-  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; }
-  .item-box {
-    background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 10px; font-size: 12px;
-  }
-  .item-box button { margin-top: 8px; width: 100%; }
-  #twistBox {
-    position: fixed; left: 50%; bottom: 135px; transform: translateX(-50%);
-    width: min(92vw, 520px); background: rgba(17, 24, 39, 0.94);
-    border: 1px solid #f59e0b; border-radius: 12px; padding: 12px 14px;
-    font-size: 13px; line-height: 1.45; display: none; z-index: 20;
-  }
+  .cs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .cs-speaker { font-weight: 800; font-size: 13px; color: #fbbf24; }
+  .cs-tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; background: #1e293b; color: #38bdf8; }
+  .cs-text { font-size: 13px; line-height: 1.45; color: #f1f5f9; margin-bottom: 10px; }
+  .cs-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
   .touch-controls {
     position: fixed; left: 0; right: 0; bottom: 12px; padding: 0 14px;
-    display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; z-index: 12;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    pointer-events: none; z-index: 12;
   }
   .joy-pad {
     width: 112px; height: 112px; border-radius: 50%;
-    background: rgba(30, 41, 59, 0.65); border: 2px solid rgba(245, 158, 11, 0.55);
+    background: rgba(30, 41, 59, 0.72); border: 2px solid rgba(245, 158, 11, 0.65);
     position: relative; pointer-events: auto;
   }
   .joy-stick {
     width: 44px; height: 44px; border-radius: 50%; background: #f59e0b;
     position: absolute; left: 34px; top: 34px;
   }
-  .act-pad { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; max-width: 210px; pointer-events: auto; }
-  .pad-btn {
-    background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid #f59e0b;
-    border-radius: 10px; padding: 10px 12px; font-size: 12px; font-weight: 800;
+  .act-pad {
+    display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px;
+    max-width: 215px; pointer-events: auto;
   }
+  .pad-btn {
+    background: rgba(30, 41, 59, 0.9); color: #fff; border: 1px solid #f59e0b;
+    border-radius: 10px; padding: 9px 11px; font-size: 11px; font-weight: 800;
+    touch-action: manipulation;
+  }
+  .pad-btn.fire { background: #dc2626; border-color: #fca5a5; }
+
+  #modal {
+    position: fixed; inset: 0; background: rgba(2, 6, 23, 0.88);
+    display: none; align-items: center; justify-content: center; padding: 14px; z-index: 30;
+  }
+  .modal-card {
+    width: 100%; max-width: 580px; max-height: 84vh; overflow-y: auto;
+    background: #111827; border: 1px solid #334155; border-radius: 14px; padding: 16px;
+    touch-action: pan-y;
+  }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 8px; margin-top: 10px; }
+  .item-box {
+    background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 10px; font-size: 12px;
+  }
+  .item-box button { margin-top: 8px; width: 100%; }
   input, select {
     width: 100%; padding: 8px; margin-top: 4px; margin-bottom: 10px;
     border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff;
@@ -82,26 +102,37 @@
 
 <div class="hud">
   <div class="pill" id="hudLevel">Level 1/100 (Training)</div>
-  <div class="pill" id="hudChar">Char: Dex</div>
+  <div class="pill" id="hudChar">Dex • Combat Knife</div>
   <div class="pill" id="hudWallet">Coins: 500 | Gems: 25</div>
-  <div class="pill" id="hudStatus">HP: 100 | Veh: 2026 Scorpio</div>
+  <div class="pill" id="hudStatus">HP: 100 | 2026 Scorpio</div>
 </div>
 
 <div class="top-btns">
-  <button class="ui-btn gold" onclick="openTab('story')">Story & Levels</button>
+  <button class="ui-btn gold" onclick="openTab('story')">Story & 100 Levels</button>
   <button class="ui-btn" onclick="openTab('chars')">Characters</button>
   <button class="ui-btn" onclick="openTab('garage')">2026 Garage</button>
   <button class="ui-btn" onclick="openTab('armory')">Weapons</button>
   <button class="ui-btn" onclick="openTab('side')">Side Missions</button>
   <button class="ui-btn" onclick="openTab('admin')">Admin Price</button>
+  <button class="ui-btn" id="sndBtn" onclick="toggleSound()">SFX: ON</button>
 </div>
 
-<div id="twistBox"></div>
+<div id="cutsceneBox">
+  <div class="cs-header">
+    <span class="cs-speaker" id="csSpeaker">Dex</span>
+    <span class="cs-tag" id="csTag">TWIST</span>
+  </div>
+  <div class="cs-text" id="csText"></div>
+  <div class="cs-actions">
+    <button class="ui-btn" onclick="closeCutscene()">Skip</button>
+    <button class="ui-btn gold" id="csNextBtn" onclick="nextCutsceneLine()">Next</button>
+  </div>
+</div>
 
 <div class="touch-controls">
   <div class="joy-pad" id="joyPad"><div class="joy-stick" id="joyStick"></div></div>
   <div class="act-pad">
-    <button class="pad-btn" onclick="fireShot()">FIRE</button>
+    <button class="pad-btn fire" onclick="fireShot()">FIRE</button>
     <button class="pad-btn" onclick="cycleVehicle()">VEHICLE</button>
     <button class="pad-btn" onclick="cycleWeapon()">WEAPON</button>
     <button class="pad-btn" onclick="claimAdReward()">+AD REWARD</button>
@@ -119,7 +150,7 @@
 </div>
 
 <script>
-const STORAGE_KEY = 'gop_save_v1';
+const STORAGE_KEY = 'gop_save_v2';
 const defaultState = {
   level: 1,
   maxUnlocked: 1,
@@ -133,7 +164,8 @@ const defaultState = {
   weapon: 'Combat Knife',
   ownedWeapons: ['Combat Knife', '9mm Pistol'],
   sideDone: 0,
-  twistShownForLevel: 0,
+  sfxOn: true,
+  cutsceneSeen: {},
   prices: {
     coinPackRupees: 49,
     coinPackAmount: 1000,
@@ -150,41 +182,118 @@ let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || structure
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); updateHud(); }
 
 const CHARACTERS = [
-  { name: 'Dex', role: 'Free Starter Hero', power: 'Balanced Street Striker', cost: 0 },
-  { name: 'Vesper', role: 'Heroine', power: 'Agility + Rapid Shot', cost: 600 },
-  { name: 'Seraphina', role: 'Villain Girl', power: 'High Charm + Stealth', cost: 850 },
-  { name: 'Malkov', role: 'Syndicate Villain', power: 'Heavy Armor + Power Hit', cost: 1200 },
-  { name: 'Nova', role: 'High-Energy Runner', power: 'Nitro Dash + Crit', cost: 750 },
-  { name: 'Kaelen', role: 'Tactical Enforcer', power: 'Precision Aim', cost: 900 },
-  { name: 'Vex', role: 'Shadow Operative', power: 'Fast Reload + Escape', cost: 950 }
+  { name: 'Dex', role: 'Free Starter Hero', power: 'Street Striker • Balanced', cost: 0 },
+  { name: 'Vesper', role: 'Heroine', power: 'Rapid Reflex • Close Ally', cost: 600 },
+  { name: 'Seraphina', role: 'Villain Girl', power: 'Shadow Charm • Double-Edge', cost: 850 },
+  { name: 'Malkov', role: 'Syndicate Villain', power: 'Heavy Armor • Ruthless', cost: 1200 },
+  { name: 'Nova', role: 'High-Energy Runner', power: 'Nitro Sprint • Fast Strike', cost: 750 },
+  { name: 'Kaelen', role: 'Tactical Enforcer', power: 'Sharp Aim • Control', cost: 900 },
+  { name: 'Vex', role: 'Shadow Operative', power: 'Quick Escape • Stealth', cost: 950 }
 ];
 
 const VEHICLES_2026 = [
-  { name: '2026 Scorpio', type: 'SUV', speed: 4.4, cost: 0 },
-  { name: '2026 Thar', type: 'Off-Roader', speed: 4.7, cost: 700 },
-  { name: '2026 Fortuner', type: 'Boss SUV', speed: 5.2, cost: 1100 },
-  { name: 'Police Interceptor', type: 'Pursuit Cruiser', speed: 5.5, cost: 1300 },
-  { name: 'Superbike X1', type: 'Bike', speed: 5.8, cost: 650 },
-  { name: 'Purvanchal Express', type: 'Train', speed: 6.2, cost: 1500 },
-  { name: 'SkyWing Jet', type: 'Flight', speed: 7.0, cost: 2200 },
-  { name: 'Apex Chopper', type: 'Helicopter', speed: 6.6, cost: 2000 }
+  { name: '2026 Scorpio', type: 'SUV', speed: 4.5, color: '#f59e0b', cost: 0 },
+  { name: '2026 Thar', type: 'Off-Roader', speed: 4.9, color: '#ea580c', cost: 700 },
+  { name: '2026 Fortuner', type: 'Boss SUV', speed: 5.3, color: '#e2e8f0', cost: 1100 },
+  { name: 'Police Interceptor', type: 'Pursuit', speed: 5.7, color: '#38bdf8', cost: 1300 },
+  { name: 'Superbike X1', type: 'Bike', speed: 6.0, color: '#ef4444', cost: 650 },
+  { name: 'Purvanchal Express', type: 'Train', speed: 6.3, color: '#a855f7', cost: 1500 },
+  { name: 'SkyWing Jet', type: 'Flight', speed: 7.2, color: '#22c55e', cost: 2200 },
+  { name: 'Apex Chopper', type: 'Helicopter', speed: 6.7, color: '#eab308', cost: 2000 }
 ];
 
 const WEAPONS = [
-  { name: 'Combat Knife', dmg: 22, cost: 0 },
-  { name: '9mm Pistol', dmg: 32, cost: 0 },
-  { name: 'Street SMG', dmg: 44, cost: 500 },
-  { name: 'Tactical Shotgun', dmg: 68, cost: 850 },
-  { name: '2026 Assault Rifle', dmg: 82, cost: 1200 },
-  { name: 'Marksman Sniper', dmg: 115, cost: 1600 },
-  { name: 'Heavy Launcher', dmg: 160, cost: 2400 }
+  { name: 'Combat Knife', dmg: 24, range: 52, cost: 0 },
+  { name: '9mm Pistol', dmg: 34, range: 65, cost: 0 },
+  { name: 'Street SMG', dmg: 46, range: 70, cost: 500 },
+  { name: 'Tactical Shotgun', dmg: 70, range: 62, cost: 850 },
+  { name: '2026 Assault Rifle', dmg: 85, range: 75, cost: 1200 },
+  { name: 'Marksman Sniper', dmg: 120, range: 90, cost: 1600 },
+  { name: 'Heavy Launcher', dmg: 165, range: 85, cost: 2400 }
 ];
 
-const STORY_ARCS = [
-  "Training Complete: Dex & Vesper find a coded ledger—but Seraphina steps from the shadows revealing Malkov already knows their escape route!",
-  "Level 2 Cliffhanger: Inside the harbor warehouse, Vesper whispers a warning to Dex while Malkov watches from above with a laser sight.",
-  "Level 3 Cliffhanger: Seraphina hands Malkov a burner drive—is she betraying Dex, or setting a trap for Malkov?",
-  "Escalation Arc (Levels 4–100): Every sector gets tougher—from street ambushes to armored convoys, sky pursuits, and syndicate showdowns up to Level 100."
+const SCENES = {
+  trainingTwist: {
+    tag: 'TRAINING CLIFFHANGER',
+    lines: [
+      { speaker: 'Dex', text: 'Drill clear. Vesper, lagta hai Purvanchal ke tracks clean hain.' },
+      { speaker: 'Vesper', text: 'Mat bhatko Dex... kisi ne CCTV feed pehle hi hijack kar li thi.' },
+      { speaker: 'Seraphina', text: 'Acha laga dekh kar ki tum dono abhi bhi purane khel mein uljhe ho.' },
+      { speaker: 'Malkov', text: 'Training yahin khatam hoti hai, Dex. Agla kadam tumhara imtihan hoga.' }
+    ]
+  },
+  romanceAndRivalry: {
+    tag: 'STORY ARC • DEX & VESPER / MALKOV & SERAPHINA',
+    lines: [
+      { speaker: 'Dex', text: 'Vesper, agar situation bigdi toh pehle tum safe zone mein nikalogi.' },
+      { speaker: 'Vesper', text: 'Main tumhare peeche chhupne aayi thi kya, Dex? Gadi sambhalo.' },
+      { speaker: 'Seraphina', text: 'Malkov, tumhe lagta hai Dex haar maanega? Uske iraade alag hain.' },
+      { speaker: 'Malkov', text: 'Jo bhi ho Seraphina, board par har mohra meri chaal se chalega.' }
+    ]
+  }
+};
+
+let audioCtx = null;
+function playTone(freq = 440, dur = 0.08, type = 'triangle', gainVal = 0.08) {
+  if (!state.sfxOn) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + dur);
+  } catch (_) {}
+}
+
+function toggleSound() {
+  state.sfxOn = !state.sfxOn;
+  document.getElementById('sndBtn').textContent = `SFX: ${state.sfxOn ? 'ON' : 'OFF'}`;
+  saveState();
+}
+
+let activeScene = null, sceneIdx = 0;
+function startCutscene(key, force = false) {
+  if (!force && state.cutsceneSeen[key]) return;
+  const sc = SCENES[key];
+  if (!sc) return;
+  activeScene = sc; sceneIdx = 0;
+  state.cutsceneSeen[key] = true;
+  saveState();
+  renderCutscene();
+}
+function renderCutscene() {
+  if (!activeScene) return;
+  const line = activeScene.lines[sceneIdx];
+  document.getElementById('csSpeaker').textContent = line.speaker;
+  document.getElementById('csTag').textContent = activeScene.tag;
+  document.getElementById('csText').textContent = line.text;
+  document.getElementById('csNextBtn').textContent = sceneIdx < activeScene.lines.length - 1 ? 'Next' : 'Continue';
+  document.getElementById('cutsceneBox').style.display = 'block';
+  playTone(560, 0.09, 'sine', 0.07);
+}
+function nextCutsceneLine() {
+  if (!activeScene) return;
+  if (sceneIdx < activeScene.lines.length - 1) {
+    sceneIdx++; renderCutscene();
+  } else closeCutscene();
+}
+function closeCutscene() {
+  activeScene = null;
+  document.getElementById('cutsceneBox').style.display = 'none';
+}
+
+const WORLD = { w: 1800, h: 1300, roadStep: 360 };
+const BUILDINGS = [
+  { x: 90, y: 90, w: 190, h: 190 }, { x: 450, y: 90, w: 200, h: 180 },
+  { x: 810, y: 90, w: 210, h: 190 }, { x: 1170, y: 90, w: 200, h: 185 },
+  { x: 90, y: 450, w: 190, h: 200 }, { x: 810, y: 450, w: 210, h: 195 },
+  { x: 1170, y: 450, w: 200, h: 200 }, { x: 450, y: 810, w: 200, h: 190 },
+  { x: 810, y: 810, w: 210, h: 190 }, { x: 1530, y: 450, w: 180, h: 200 }
 ];
 
 const canvas = document.getElementById('gameCanvas');
@@ -192,24 +301,26 @@ const ctx = canvas.getContext('2d');
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 window.addEventListener('resize', resize); resize();
 
-const player = { x: 240, y: 240, vx: 0, vy: 0, radius: 16, angle: 0 };
-const targets = [];
+const player = { x: 220, y: 360, angle: 0, fireCooldown: 0 };
+const enemies = [];
 const bullets = [];
+const enemyBullets = [];
 const keys = {};
 
-function spawnTargets() {
-  targets.length = 0;
-  const count = Math.min(12, 3 + Math.floor(state.level / 4));
+function spawnEnemies() {
+  enemies.length = 0;
+  const count = Math.min(14, 3 + Math.floor(state.level / 3));
   for (let i = 0; i < count; i++) {
-    targets.push({
-      x: 120 + ((i * 197 + state.level * 53) % Math.max(300, canvas.width - 180)),
-      y: 120 + ((i * 131 + state.level * 37) % Math.max(260, canvas.height - 200)),
-      hp: 40 + state.level * 6,
-      r: 15
+    enemies.push({
+      x: 380 + ((i * 223 + state.level * 71) % (WORLD.w - 480)),
+      y: 260 + ((i * 179 + state.level * 59) % (WORLD.h - 360)),
+      hp: 45 + state.level * 7,
+      speed: Math.min(3.8, 1.35 + state.level * 0.03),
+      cd: 40 + (i * 17) % 60
     });
   }
 }
-spawnTargets();
+spawnEnemies();
 
 window.addEventListener('keydown', e => {
   keys[e.key.toLowerCase()] = true;
@@ -241,30 +352,26 @@ function resetJoy() {
 joyPad.addEventListener('touchend', resetJoy);
 joyPad.addEventListener('touchcancel', resetJoy);
 
-function showTwist(msg) {
-  const box = document.getElementById('twistBox');
-  box.textContent = msg;
-  box.style.display = 'block';
-  clearTimeout(showTwist._t);
-  showTwist._t = setTimeout(() => { box.style.display = 'none'; }, 6500);
-}
-
 function fireShot() {
+  if (player.fireCooldown > 0) return;
   const w = WEAPONS.find(x => x.name === state.weapon) || WEAPONS[0];
   bullets.push({
-    x: player.x + Math.cos(player.angle) * 20,
-    y: player.y + Math.sin(player.angle) * 20,
-    vx: Math.cos(player.angle) * 9,
-    vy: Math.sin(player.angle) * 9,
+    x: player.x + Math.cos(player.angle) * 22,
+    y: player.y + Math.sin(player.angle) * 22,
+    vx: Math.cos(player.angle) * 11,
+    vy: Math.sin(player.angle) * 11,
     dmg: w.dmg,
-    life: 65
+    life: w.range
   });
+  player.fireCooldown = 10;
+  playTone(720, 0.05, 'square', 0.05);
 }
 
 function cycleVehicle() {
   if (!state.ownedVehicles.length) return;
   const idx = state.ownedVehicles.indexOf(state.vehicle);
   state.vehicle = state.ownedVehicles[(idx + 1) % state.ownedVehicles.length];
+  playTone(420, 0.07, 'triangle', 0.06);
   saveState();
 }
 
@@ -272,43 +379,39 @@ function cycleWeapon() {
   if (!state.ownedWeapons.length) return;
   const idx = state.ownedWeapons.indexOf(state.weapon);
   state.weapon = state.ownedWeapons[(idx + 1) % state.ownedWeapons.length];
+  playTone(620, 0.07, 'triangle', 0.06);
   saveState();
 }
 
 function claimAdReward() {
   state.coins += Number(state.prices.adRewardCoins || 150);
   state.gems += 2;
+  playTone(880, 0.12, 'sine', 0.08);
   saveState();
-  showTwist(`Rewarded Ad Claimed: +${state.prices.adRewardCoins} Coins & +2 Gems added!`);
 }
 
 function advanceLevel() {
-  if (state.twistShownForLevel !== state.level) {
-    state.twistShownForLevel = state.level;
-    const msg = state.level === 1
-      ? STORY_ARCS[0]
-      : state.level === 2
-      ? STORY_ARCS[1]
-      : state.level === 3
-      ? STORY_ARCS[2]
-      : `Level ${state.level} Cliffhanger: Rival syndicate forces tighten security—unlock Level ${Math.min(100, state.level + 1)} to strike back!`;
-    showTwist(msg);
-  }
+  const justFinishedLevel = state.level;
   if (state.level < 100) {
     state.level += 1;
     state.maxUnlocked = Math.max(state.maxUnlocked, state.level);
     state.coins += 120 + state.level * 10;
-    spawnTargets();
+    state.hp = Math.min(100, state.hp + 20);
+    spawnEnemies();
+    playTone(960, 0.16, 'triangle', 0.08);
     saveState();
+    if (justFinishedLevel === 1) startCutscene('trainingTwist');
+    else if (justFinishedLevel === 2) startCutscene('romanceAndRivalry');
   }
 }
 
 function updateHud() {
   const tag = state.level === 1 ? 'Training' : state.level > 75 ? 'Extreme' : state.level > 35 ? 'Hard' : 'Rising';
   document.getElementById('hudLevel').textContent = `Level ${state.level}/100 (${tag})`;
-  document.getElementById('hudChar').textContent = `Char: ${state.char} | Wpn: ${state.weapon}`;
+  document.getElementById('hudChar').textContent = `${state.char} • ${state.weapon}`;
   document.getElementById('hudWallet').textContent = `Coins: ${state.coins} | Gems: ${state.gems}`;
-  document.getElementById('hudStatus').textContent = `HP: ${state.hp} | Veh: ${state.vehicle}`;
+  document.getElementById('hudStatus').textContent = `HP: ${state.hp} | ${state.vehicle}`;
+  document.getElementById('sndBtn').textContent = `SFX: ${state.sfxOn ? 'ON' : 'OFF'}`;
 }
 
 function openTab(tab) {
@@ -318,20 +421,18 @@ function openTab(tab) {
   modal.style.display = 'flex';
 
   if (tab === 'story') {
-    title.textContent = 'Story Arcs & 100-Level Roadmap';
+    title.textContent = 'Story Scenes & 100-Level Roadmap';
     body.innerHTML = `
-      <p style="font-size:12px;color:#cbd5e1;">Dex & Vesper vs Malkov & Seraphina. Difficulty scales from Level 1 (Training) to Level 100 (Extreme).</p>
-      <div class="grid-2">
-        ${STORY_ARCS.map(a => `<div class="item-box">${a}</div>`).join('')}
+      <p style="font-size:12px;color:#cbd5e1;">Levels 1 to 100 escalation with Dex, Vesper, Malkov & Seraphina.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+        <button class="ui-btn gold" onclick="closeModal();startCutscene('trainingTwist', true);">Play Training Twist Scene</button>
+        <button class="ui-btn" onclick="closeModal();startCutscene('romanceAndRivalry', true);">Play Dex-Vesper / Malkov Scene</button>
       </div>
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="ui-btn gold" onclick="advanceLevel();openTab('story');">Complete Current Level & Trigger Twist</button>
-        <label style="font-size:12px;width:100%;">Jump to Unlocked Level (1–${state.maxUnlocked}):
-          <select onchange="state.level=Number(this.value);spawnTargets();saveState();openTab('story');">
-            ${Array.from({length: state.maxUnlocked}, (_, i) => `<option value="${i+1}" ${state.level===i+1?'selected':''}>Level ${i+1}</option>`).join('')}
-          </select>
-        </label>
-      </div>`;
+      <label style="font-size:12px;width:100%;">Jump to Unlocked Level (1–${state.maxUnlocked}):
+        <select onchange="state.level=Number(this.value);spawnEnemies();saveState();openTab('story');">
+          ${Array.from({length: state.maxUnlocked}, (_, i) => `<option value="${i+1}" ${state.level===i+1?'selected':''}>Level ${i+1}</option>`).join('')}
+        </select>
+      </label>`;
   } else if (tab === 'chars') {
     title.textContent = 'Characters (Dex Free + Roster)';
     body.innerHTML = `<div class="grid-2">${CHARACTERS.map(c => {
@@ -369,156 +470,9 @@ function openTab(tab) {
       </div>`;
     }).join('')}</div>`;
   } else if (tab === 'side') {
-    title.textContent = 'Side Missions & Coin/Gem Packs';
+    title.textContent = 'Side Missions & Packs';
     body.innerHTML = `
       <div class="item-box">
-        <strong>Side Contracts Completed: ${state.sideDone}</strong><br>
-        Quick courier, VIP pickup, and rival drop side missions reward Coins & Gems.
-        <button class="ui-btn gold" onclick="state.sideDone++;state.coins+=250;state.gems+=5;saveState();openTab('side');">
-          Complete Side Mission (+250 Coins, +5 Gems)
-        </button>
-      </div>
-      <div class="grid-2">
-        <div class="item-box">
-          <strong>${state.prices.coinPackAmount} Coins Pack</strong><br>Rate: ₹${state.prices.coinPackRupees}
-          <button class="ui-btn" onclick="state.coins+=Number(state.prices.coinPackAmount);saveState();openTab('side');">Simulate Top-Up</button>
-        </div>
-        <div class="item-box">
-          <strong>${state.prices.gemPackAmount} Gems Pack</strong><br>Rate: ₹${state.prices.gemPackRupees}
-          <button class="ui-btn" onclick="state.gems+=Number(state.prices.gemPackAmount);saveState();openTab('side');">Simulate Top-Up</button>
-        </div>
-      </div>`;
-  } else if (tab === 'admin') {
-    title.textContent = 'Admin Price & Rate Configuration';
-    body.innerHTML = `
-      <label style="font-size:12px;">Coin Pack Price (₹)
-        <input id="pCoinRs" type="number" value="${state.prices.coinPackRupees}" />
-      </label>
-      <label style="font-size:12px;">Coin Pack Coins Amount
-        <input id="pCoinAmt" type="number" value="${state.prices.coinPackAmount}" />
-      </label>
-      <label style="font-size:12px;">Gem Pack Price (₹)
-        <input id="pGemRs" type="number" value="${state.prices.gemPackRupees}" />
-      </label>
-      <label style="font-size:12px;">Ad Reward Coins
-        <input id="pAdAmt" type="number" value="${state.prices.adRewardCoins}" />
-      </label>
-      <label style="font-size:12px;">Character Unlock Price (Coins)
-        <input id="pCharAmt" type="number" value="${state.prices.charUnlockCoins}" />
-      </label>
-      <button class="ui-btn gold" onclick="saveAdminPrices()">Save Admin Pricing</button>`;
-  }
-}
-
-function closeModal() { document.getElementById('modal').style.display = 'none'; }
-
-function selectOrBuyChar(name, price) {
-  if (state.ownedChars.includes(name)) state.char = name;
-  else if (state.coins >= price) { state.coins -= price; state.ownedChars.push(name); state.char = name; }
-  else return showTwist('Not enough Coins! Use +AD REWARD or complete a Side Mission.');
-  saveState(); openTab('chars');
-}
-
-function selectOrBuyVeh(name, price) {
-  if (state.ownedVehicles.includes(name)) state.vehicle = name;
-  else if (state.coins >= price) { state.coins -= price; state.ownedVehicles.push(name); state.vehicle = name; }
-  else return showTwist('Not enough Coins to unlock this 2026 vehicle.');
-  saveState(); openTab('garage');
-}
-
-function selectOrBuyWpn(name, price) {
-  if (state.ownedWeapons.includes(name)) state.weapon = name;
-  else if (state.coins >= price) { state.coins -= price; state.ownedWeapons.push(name); state.weapon = name; }
-  else return showTwist('Not enough Coins to unlock this weapon.');
-  saveState(); openTab('armory');
-}
-
-function saveAdminPrices() {
-  state.prices.coinPackRupees = Number(document.getElementById('pCoinRs').value) || 49;
-  state.prices.coinPackAmount = Number(document.getElementById('pCoinAmt').value) || 1000;
-  state.prices.gemPackRupees = Number(document.getElementById('pGemRs').value) || 99;
-  state.prices.adRewardCoins = Number(document.getElementById('pAdAmt').value) || 150;
-  state.prices.charUnlockCoins = Number(document.getElementById('pCharAmt').value) || 600;
-  saveState();
-  showTwist('Admin prices updated!');
-}
-
-function loop() {
-  const veh = VEHICLES_2026.find(v => v.name === state.vehicle) || VEHICLES_2026[0];
-  let ix = joyVec.x, iy = joyVec.y;
-  if (keys['w'] || keys['arrowup']) iy -= 1;
-  if (keys['s'] || keys['arrowdown']) iy += 1;
-  if (keys['a'] || keys['arrowleft']) ix -= 1;
-  if (keys['d'] || keys['arrowright']) ix += 1;
-  const mag = Math.hypot(ix, iy);
-  if (mag > 1) { ix /= mag; iy /= mag; }
-
-  player.x = Math.max(24, Math.min(canvas.width - 24, player.x + ix * veh.speed));
-  player.y = Math.max(95, Math.min(canvas.height - 125, player.y + iy * veh.speed));
-  if (mag > 0.05) player.angle = Math.atan2(iy, ix);
-
-  ctx.fillStyle = '#0f172a';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.strokeStyle = 'rgba(148,163,184,0.12)';
-  for (let x = 0; x < canvas.width; x += 60) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-  for (let y = 0; y < canvas.height; y += 60) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
-
-  for (let i = targets.length - 1; i >= 0; i--) {
-    const t = targets[i];
-    ctx.fillStyle = '#ef4444';
-    ctx.beginPath(); ctx.arc(t.x, t.y, t.r, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#fff'; ctx.font = '11px sans-serif';
-    ctx.fillText(`HP:${t.hp}`, t.x - 16, t.y - 20);
-  }
-
-  for (let i = bullets.length - 1; i >= 0; i--) {
-    const b = bullets[i];
-    b.x += b.vx; b.y += b.vy; b.life--;
-    ctx.fillStyle = '#fbbf24';
-    ctx.fillRect(b.x - 3, b.y - 3, 6, 6);
-
-    for (let j = targets.length - 1; j >= 0; j--) {
-      const t = targets[j];
-      if (Math.hypot(b.x - t.x, b.y - t.y) < t.r + 5) {
-        t.hp -= b.dmg;
-        b.life = 0;
-        if (t.hp <= 0) {
-          targets.splice(j, 1);
-          state.coins += 50 + state.level * 5;
-          saveState();
-        }
-        break;
-      }
-    }
-    if (b.life <= 0) bullets.splice(i, 1);
-  }
-
-  if (targets.length === 0) advanceLevel();
-
-  ctx.save();
-  ctx.translate(player.x, player.y);
-  ctx.rotate(player.angle);
-  ctx.fillStyle = '#f59e0b';
-  ctx.fillRect(-18, -11, 36, 22);
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(10, -3, 10, 6);
-  ctx.restore();
-
-  ctx.fillStyle = '#e2e8f0';
-  ctx.font = '12px sans-serif';
-  ctx.fillText(`${state.char} [${state.vehicle}]`, player.x - 42, player.y - 18);
-
-  requestAnimationFrame(loop);
-}
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
-}
-
-updateHud();
-loop();
-</script>
-</body>
-</html>
-
+        <strong>Side Contracts Done: ${state.sideDone}</strong><br>
+        Quick district contracts give extra Coins & Gems.
+        <button class="ui-btn
