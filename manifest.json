@@ -1,1 +1,12 @@
 
+{
+  "name": "Gangs of Purvanchal",
+  "short_name": "Purvanchal",
+  "description": "Gangs of Purvanchal open-world web and mobile game",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#f59e0b",
+  "orientation": "any"
+}
